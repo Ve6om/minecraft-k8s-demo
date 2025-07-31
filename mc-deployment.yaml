@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mc-server-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mc-server-1
+  template:
+    metadata:
+      labels:
+        app: mc-server-1
+    spec:
+      containers:
+        - name: minecraft
+          image: itzg/minecraft-server:java21-graalvm
+          ports:
+            - containerPort: 25565
+          env:
+            - name: EULA
+              value: "TRUE"
+            - name: TYPE
+              value: "PAPER"
+          volumeMounts:
+            - name: mc-data
+              mountPath: /data
+      volumes:
+        - name: mc-data
+          persistentVolumeClaim:
+            claimName: mc-pvc-1
